@@ -1,0 +1,40 @@
+:root {
+    --player1-color: gold;
+    --player2-color: red;
+    --blue: dodgerblue;
+}
+
+#board {
+    display: grid;
+    grid-template-rows: repeat(6, 100px);
+    grid-template-columns: repeat(7,100px);
+    margin: auto;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.slot {
+    background-color: var(--blue);
+    padding: 10px;
+}
+
+.slot label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: inset 2px 2px 2px 2px rgba(0,0,0,0.2);
+}
+.slot label.player1 {
+    background-color: var(--player1-color);
+}
+
+.slot label.player2 {
+    background-color: var(--player2-color);
+}
+
+.slot input[type=checkbox] {
+    display: none;
+}
