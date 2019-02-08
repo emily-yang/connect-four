@@ -11,5 +11,5 @@ Made with HTML, CSS, and JS
     - [x] Selecting input toggles color
     - [x] Change whose turn it is
     - [x] Change whose turn it is displayed
-    - [ ] Disable invalid slots
+    - [x] Disable invalid slots
 - [ ] Win logic
