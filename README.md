@@ -13,3 +13,4 @@ Made with HTML, CSS, and JS
     - [x] Change whose turn it is displayed
     - [x] Disable invalid slots
 - [ ] Win logic
+- [ ] Make it modular
