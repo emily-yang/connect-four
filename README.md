@@ -4,8 +4,8 @@ Connect Four game
 Made with HTML, CSS, and JS
 
 ## TODO
-- [ ] Markup
-- [ ] Styles
+- [x] Markup
+- [x] Styles
 - [ ] Generate board programmatically
 - [ ] Turn logic
 - [ ] Win logic
