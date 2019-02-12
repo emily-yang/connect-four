@@ -3,16 +3,26 @@ const BOARDCOLS = 7;
 
 const board = document.getElementById('board');
 const playerIndicator = document.getElementById('player-indicator');
+const turnIndicator = document.getElementById('turn-indicator');
+const dropTrack = document.getElementById('drop-track');
+
+let trackHTML = '';
+for (let col = 0; col < BOARDCOLS; col++) {
+	trackHTML += `
+	<div class='player1' data-col='${col}'></div>
+	`;
+}
+dropTrack.innerHTML = trackHTML;
 
 let boardHTML = '';
 for (let row = BOARDROWS - 1; row >= 0; row--) {
 	for (let col = 0; col < BOARDCOLS; col++) {
 		boardHTML += `
-			<div class='slot'>
-				<label for='slot${col}${row}'>
-					<input onchange='runTurn(this)' type='checkbox' ${row > 0 ? 'disabled' : ''} name='slot${col}${row}' id='slot${col}${row}' data-row='${row}' data-col='${col}'>
-				</label>
-			</div>
+		<div class='slot'>
+		<label for='slot${col}${row}'>
+		<input onchange='runTurn(this)' type='checkbox' ${row > 0 ? 'disabled' : ''} name='slot${col}${row}' id='slot${col}${row}' data-row='${row}' data-col='${col}'>
+		</label>
+		</div>
 		`;
 	}
 }
@@ -25,7 +35,6 @@ let player1Turn = true;
 function runTurn(input) {
 	// change color of label
 	input.parentElement.className = player1Turn ? 'player1' : 'player2';
-
 	// change what's disabled
 	// disable the input
 	input.disabled = true;
@@ -37,13 +46,20 @@ function runTurn(input) {
 		neighbor.disabled = false;
 	}
 
-// 	// check if there's a win
-const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
-if (isWin) {
-	alert('winner!');
-	return;
-}
+	// 	// check if there's a win
+	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
+	if (isWin) {
+		const player = player1Turn ? 'player1' : 'player2';
+		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">Player 1</span> wins 🎉`;
 
+		// get all checkboxs
+		const checkboxes = document.querySelectorAll('.slot input[type=checkbox]');
+		// and disable all of them
+		checkboxes.forEach(checkbox => {
+			checkbox.disabled = true;
+		});
+		return;
+	}
 	// change whose turn it is
 	player1Turn = !player1Turn;
 	// update player-indicator text
@@ -51,10 +67,14 @@ if (isWin) {
 		playerIndicator.innerText = 'PLAYER1 ';
 		playerIndicator.className = 'player1';
 	} else {
-	playerIndicator.innerText = 'PLAYER2 ';
-	playerIndicator.className = 'player2';
+		playerIndicator.innerText = 'PLAYER2 ';
+		playerIndicator.className = 'player2';
 	}
 
+	// change color of drop track
+	dropTrack.childNodes.forEach(slot => {
+		slot.className = player1Turn ? 'player1' : 'player2';
+	});
 }
 
 function checkWin(col, row, currPlayer) {
