@@ -8,11 +8,10 @@ const dropTrack = document.getElementById('drop-track');
 
 let trackHTML = '';
 for (let col = 0; col < BOARDCOLS; col++) {
-	trackHTML += `
-	<div class='player1' data-col='${col}'></div>
-	`;
+	trackHTML += `<div class='player1' data-col='${col}'></div>`;
 }
 dropTrack.innerHTML = trackHTML;
+console.log(trackHTML);
 
 let boardHTML = '';
 for (let row = BOARDROWS - 1; row >= 0; row--) {
@@ -46,26 +45,18 @@ function handleClick(e) {
 	addPiece(col, openSlots[col]);
 	openSlots[col]++;
 
-	// TODO: disable column if full
-
+	// disable column if full
+	if (openSlots[col] >= BOARDCOLS - 1){
+		const filledColumn = dropTrack.childNodes[col];
+		// filledColumn.removeEventListener('click', handleClick);
+		// filledColumn.style.opacity = 0;
+		filledColumn.style.visibility = "hidden";
+	}
 }
 
 
 
 function addPiece(col, row) {
-/* 	// change color of label
-	input.parentElement.className = player1Turn ? 'player1' : 'player2';
-	// change what's disabled
-	// disable the input
-	input.disabled = true;
-	// enable the slot at (row+1, col)
-	const {row, col} = input.dataset;
-	// check if input is on the top row
-	if (row < BOARDROWS - 1) {
-		const neighbor = document.getElementById(`slot${col}${parseInt(row)+1}`);
-		neighbor.disabled = false;
-	}
- */
 	const newPiece = document.getElementById(`slot${col}${row}`);
 	newPiece.className = player1Turn? 'player1' : 'player2';
 
@@ -73,15 +64,7 @@ function addPiece(col, row) {
 	// 	// check if there's a win
 	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
 	if (isWin) {
-		const player = player1Turn ? 'player1' : 'player2';
-		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
-
-/* 		// get all checkboxs
-		const checkboxes = document.querySelectorAll('.slot input[type=checkbox]');
-		// and disable all of them
-		checkboxes.forEach(checkbox => {
-			checkbox.disabled = true;
-		}); */
+		endGame();
 		return;
 	}
 	// change whose turn it is
@@ -95,15 +78,19 @@ function addPiece(col, row) {
 		playerIndicator.className = 'player2';
 	}
 
-	// change color of drop track
+	// update color of drop track
 	dropTrack.childNodes.forEach(slot => {
 		slot.className = player1Turn ? 'player1' : 'player2';
 	});
 }
 
-function fillSlot(col, row) {
-	const slot = document.getElementById(`slot${col}${row}`);
-	console.log(slot);
+function endGame() {
+	const player = player1Turn ? 'player1' : 'player2';
+	turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
+
+	dropTrack.childNodes.forEach(col => {
+		col.style.visibility = 'hidden';
+	})
 }
 
 function checkWin(col, row, currPlayer) {
