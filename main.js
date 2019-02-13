@@ -10,8 +10,6 @@ let trackHTML = '';
 for (let col = 0; col < BOARDCOLS; col++) {
 	trackHTML += `<div class='player1' data-col='${col}'></div>`;
 }
-dropTrack.innerHTML = trackHTML;
-console.log(trackHTML);
 
 let boardHTML = '';
 for (let row = BOARDROWS - 1; row >= 0; row--) {
@@ -21,24 +19,12 @@ for (let row = BOARDROWS - 1; row >= 0; row--) {
 			<div id='slot${col}${row}'></div>
 		</div>
 		`;
-		// boardHTML += `
-		// <div class='slot>
-		// <label for='slot${col}${row}'>
-		// <input onchange='runTurn(this)' type='checkbox' ${row > 0 ? 'disabled' : ''} name='slot${col}${row}' id='slot${col}${row}' data-row='${row}' data-col='${col}'>
-		// </label>
-		// </div>
-		// `;
 	}
 }
 
-// set the board html
-board.innerHTML = boardHTML;
-let player1Turn = true;
-const openSlots = Array(BOARDCOLS).fill(0);
-
-dropTrack.childNodes.forEach(column => {
-	column.addEventListener('click', handleClick);
-});
+let player1Turn;
+const openSlots = new Array(BOARDCOLS);
+initializeGame();
 
 function handleClick(e) {
 	const col = parseInt(e.target.dataset.col);
@@ -46,20 +32,13 @@ function handleClick(e) {
 	openSlots[col]++;
 
 	// disable column if full
-	if (openSlots[col] >= BOARDCOLS - 1){
-		const filledColumn = dropTrack.childNodes[col];
-		// filledColumn.removeEventListener('click', handleClick);
-		// filledColumn.style.opacity = 0;
-		filledColumn.style.visibility = "hidden";
-	}
+	if (openSlots[col] >= BOARDCOLS - 1)
+		dropTrack.childNodes[col].style.visibility = "hidden";
 }
-
-
 
 function addPiece(col, row) {
 	const newPiece = document.getElementById(`slot${col}${row}`);
 	newPiece.className = player1Turn? 'player1' : 'player2';
-
 
 	// 	// check if there's a win
 	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
@@ -84,6 +63,19 @@ function addPiece(col, row) {
 	});
 }
 
+// reset entire board and game
+function initializeGame() {
+	dropTrack.innerHTML = trackHTML;
+	board.innerHTML = boardHTML;
+	player1Turn = true;
+	openSlots.fill(0);
+	dropTrack.childNodes.forEach(column => {
+		column.addEventListener('click', handleClick);
+	});
+	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
+}
+
+// announce winner and prevent further plays
 function endGame() {
 	const player = player1Turn ? 'player1' : 'player2';
 	turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
