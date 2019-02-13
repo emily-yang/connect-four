@@ -19,21 +19,41 @@ for (let row = BOARDROWS - 1; row >= 0; row--) {
 	for (let col = 0; col < BOARDCOLS; col++) {
 		boardHTML += `
 		<div class='slot'>
-		<label for='slot${col}${row}'>
-		<input onchange='runTurn(this)' type='checkbox' ${row > 0 ? 'disabled' : ''} name='slot${col}${row}' id='slot${col}${row}' data-row='${row}' data-col='${col}'>
-		</label>
+			<div id='slot${col}${row}'></div>
 		</div>
 		`;
+		// boardHTML += `
+		// <div class='slot>
+		// <label for='slot${col}${row}'>
+		// <input onchange='runTurn(this)' type='checkbox' ${row > 0 ? 'disabled' : ''} name='slot${col}${row}' id='slot${col}${row}' data-row='${row}' data-col='${col}'>
+		// </label>
+		// </div>
+		// `;
 	}
 }
 
 // set the board html
 board.innerHTML = boardHTML;
-
 let player1Turn = true;
+const openSlots = Array(BOARDCOLS).fill(0);
 
-function runTurn(input) {
-	// change color of label
+dropTrack.childNodes.forEach(column => {
+	column.addEventListener('click', handleClick);
+});
+
+function handleClick(e) {
+	const col = parseInt(e.target.dataset.col);
+	addPiece(col, openSlots[col]);
+	openSlots[col]++;
+
+	// TODO: disable column if full
+
+}
+
+
+
+function addPiece(col, row) {
+/* 	// change color of label
 	input.parentElement.className = player1Turn ? 'player1' : 'player2';
 	// change what's disabled
 	// disable the input
@@ -45,29 +65,33 @@ function runTurn(input) {
 		const neighbor = document.getElementById(`slot${col}${parseInt(row)+1}`);
 		neighbor.disabled = false;
 	}
+ */
+	const newPiece = document.getElementById(`slot${col}${row}`);
+	newPiece.className = player1Turn? 'player1' : 'player2';
+
 
 	// 	// check if there's a win
 	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
 	if (isWin) {
 		const player = player1Turn ? 'player1' : 'player2';
-		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">Player 1</span> wins 🎉`;
+		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
 
-		// get all checkboxs
+/* 		// get all checkboxs
 		const checkboxes = document.querySelectorAll('.slot input[type=checkbox]');
 		// and disable all of them
 		checkboxes.forEach(checkbox => {
 			checkbox.disabled = true;
-		});
+		}); */
 		return;
 	}
 	// change whose turn it is
 	player1Turn = !player1Turn;
 	// update player-indicator text
 	if (player1Turn) {
-		playerIndicator.innerText = 'PLAYER1 ';
+		playerIndicator.innerText = 'PLAYER 1 ';
 		playerIndicator.className = 'player1';
 	} else {
-		playerIndicator.innerText = 'PLAYER2 ';
+		playerIndicator.innerText = 'PLAYER 2 ';
 		playerIndicator.className = 'player2';
 	}
 
@@ -75,6 +99,11 @@ function runTurn(input) {
 	dropTrack.childNodes.forEach(slot => {
 		slot.className = player1Turn ? 'player1' : 'player2';
 	});
+}
+
+function fillSlot(col, row) {
+	const slot = document.getElementById(`slot${col}${row}`);
+	console.log(slot);
 }
 
 function checkWin(col, row, currPlayer) {
@@ -87,7 +116,7 @@ function checkWin(col, row, currPlayer) {
 function checkDown(col, row, currPlayer) {
 	if (row < 3) return false; // can't connect 4 verically if height < 4
 	for (let j = row - 1; j > row - 4; j--) {
-		const currSlotPlayer = document.getElementById(`slot${col}${j}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${col}${j}`).className;
 		if (currSlotPlayer !== currPlayer) return false;
 	}
 	return true;
@@ -101,7 +130,7 @@ function checkAcross(col, row, currPlayer) {
 	for (let i = col + 1; i < col + 4; i++) {
 		// break if out of bounds
 		if (i >= BOARDCOLS) break;
-		const currSlotPlayer = document.getElementById(`slot${i}${row}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${i}${row}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors+= 1;
 		else break;
 	}
@@ -109,7 +138,7 @@ function checkAcross(col, row, currPlayer) {
 	for (let i = col - 1; i > col - 4; i--) {
 		// break if out of bounds
 		if (i < 0) break;
-		const currSlotPlayer = document.getElementById(`slot${i}${row}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${i}${row}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors+= 1;
 		else break;
 	}
@@ -127,7 +156,7 @@ function checkUpLeft(col, row, currPlayer) {
 	for (let i = 1; i < 4; i++) {
 		// break if out of bounds
 		if (col - i < 0 || row + i >= BOARDROWS) break;
-		const currSlotPlayer = document.getElementById(`slot${col-i}${row+i}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${col-i}${row+i}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors += 1;
 		else break;
 	}
@@ -136,7 +165,7 @@ function checkUpLeft(col, row, currPlayer) {
 	for (let i = 1; i < 4; i++) {
 		// break if out of bounds
 		if (col + i >= BOARDCOLS || row - i < 0) break;
-		const currSlotPlayer = document.getElementById(`slot${col+i}${row-i}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${col+i}${row-i}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors += 1;
 		else break;
 	}
@@ -150,7 +179,7 @@ function checkUpRight(col, row, currPlayer) {
 	for (let i = 1; i < 4; i++) {
 		// break if out of bounds
 		if (col + i >= BOARDCOLS || row + i >= BOARDROWS) break;
-		const currSlotPlayer = document.getElementById(`slot${col+i}${row+i}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${col+i}${row+i}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors += 1;
 		else break;
 	}
@@ -159,7 +188,7 @@ function checkUpRight(col, row, currPlayer) {
 	for (let i = 1; i < 4; i++) {
 		// break if out of bounds
 		if (col - i < 0 || row - i < 0) break;
-		const currSlotPlayer = document.getElementById(`slot${col-i}${row-i}`).parentElement.className;
+		const currSlotPlayer = document.getElementById(`slot${col-i}${row-i}`).className;
 		if (currSlotPlayer === currPlayer) sameColorNeighbors += 1;
 		else break;
 	}
