@@ -9,6 +9,7 @@ const dropTrack = document.getElementById('drop-track');
 const discSound = document.getElementById('disc-sound');
 const clatterSound = document.getElementById('clatter-sound');
 const winSound = document.getElementById('win-sound');
+let userInitiatedFlag = false;
 
 let trackHTML = '';
 for (let col = 0; col < BOARDCOLS; col++) {
@@ -112,7 +113,7 @@ function handleClick(e) {
 
 // reset entire board and game
 function initializeGame() {
-	clatterSound.play();
+	userInitiatedFlag ? clatterSound.play() : userInitiatedFlag = true;
 	dropTrack.innerHTML = trackHTML;
 	board.innerHTML = boardHTML;
 	player1Turn = true;
