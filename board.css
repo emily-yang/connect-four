@@ -1,3 +1,11 @@
+#player-indicator.player1 {
+    color: var(--player1-color);
+}
+
+#player-indicator.player2 {
+    color: var(--player2-color);
+}
+
 #drop-track {
     display: grid;
     grid-template-rows: 100px;

@@ -3,7 +3,7 @@ const BOARDCOLS = 7;
 
 const board = document.getElementById('board');
 const grid = document.getElementById('grid');
-const playerIndicator = document.getElementById('player-indicator');
+let playerIndicator = document.getElementById('player-indicator');
 const turnIndicator = document.getElementById('turn-indicator');
 const dropTrack = document.getElementById('drop-track');
 
@@ -32,7 +32,7 @@ grid.style.left = `${boardLeft}px`;
 
 initializeGame();
 
-function dropDisc(col, row) {
+function placeDisc(col, row) {
 	// select the slot to be filled
 	// const col = disc.dataset.col;
 	// const row = openSlots[col];
@@ -69,6 +69,8 @@ function dropDisc(col, row) {
 
 		// remove disc after slot is filled
 		document.body.removeChild(disc);
+
+		updatePlayerIndicator();
 	});
 
 	// 	// check if there's a win
@@ -77,7 +79,9 @@ function dropDisc(col, row) {
 		endGame();
 		return;
 	}
-	// update player-indicator text
+}
+
+function updatePlayerIndicator() {
 	if (player1Turn) {
 		playerIndicator.innerText = 'PLAYER 1 ';
 		playerIndicator.className = 'player1';
@@ -94,7 +98,7 @@ function handleClick(e) {
 	clickedCol.style.visibility = 'hidden';
 
 	const col = parseInt(e.target.dataset.col);
-	dropDisc(col, openSlots[col]);
+	placeDisc(col, openSlots[col]);
 	openSlots[col]++;
 
 	// disable column if full
@@ -112,6 +116,7 @@ function initializeGame() {
 		column.addEventListener('click', handleClick);
 	});
 	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
+	playerIndicator = document.getElementById('player-indicator');
 }
 
 // announce winner and prevent further plays
