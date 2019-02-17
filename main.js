@@ -9,7 +9,9 @@ const dropTrack = document.getElementById('drop-track');
 const discSound = document.getElementById('disc-sound');
 const clatterSound = document.getElementById('clatter-sound');
 const winSound = document.getElementById('win-sound');
+const drawSound = document.getElementById('draw-sound');
 let userInitiatedFlag = false;
+let discsPlayed = 0;
 
 let trackHTML = '';
 for (let col = 0; col < BOARDCOLS; col++) {
@@ -37,12 +39,10 @@ grid.style.left = `${boardLeft}px`;
 initializeGame();
 
 function placeDisc(col, row) {
-	// select the slot to be filled
-	// const col = disc.dataset.col;
-	// const row = openSlots[col];
-	const slotToFill = document.getElementById(`slot${col}${row}`);
+	discsPlayed++;
 
-	// get coords of the slot position (ending location)
+	// get coords of the slot to be filled (ending location)
+	const slotToFill = document.getElementById(`slot${col}${row}`);
 	const slotOffset = slotToFill.getBoundingClientRect();
 	const {top, left} = slotOffset;
 
@@ -65,28 +65,30 @@ function placeDisc(col, row) {
 			clickedCol.style.visibility = 'visible';
 		// // add color to slot
 		slotToFill.classList.add(`${player1Turn? 'player1' : 'player2'}`);
-		// // change whose turn it is
-		player1Turn = !player1Turn;
-		// // update color in drop track
-		dropTrack.childNodes.forEach(slot => {
-			slot.className = player1Turn ? 'player1' : 'player2';
-		});
 
 		// remove disc after slot is filled
 		document.body.removeChild(disc);
 
-		updatePlayerIndicator();
+		// check if there's a win
+		const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
+		isWin ?	endGame() : updatePlayerIndicator();
 	});
-
-	// 	// check if there's a win
-	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
-	if (isWin) {
-		endGame();
-		return;
-	}
 }
 
 function updatePlayerIndicator() {
+	if (discsPlayed === BOARDCOLS * BOARDROWS) {
+		turnIndicator.innerHTML = `GAME OVER - DRAW`;
+		drawSound.play();
+		return;
+	}
+
+			// // change whose turn it is
+			player1Turn = !player1Turn;
+			// // update color in drop track
+			dropTrack.childNodes.forEach(slot => {
+				slot.className = player1Turn ? 'player1' : 'player2';
+			});
+
 	if (player1Turn) {
 		playerIndicator.innerText = 'PLAYER 1 ';
 		playerIndicator.className = 'player1';
@@ -123,6 +125,7 @@ function initializeGame() {
 	});
 	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
 	playerIndicator = document.getElementById('player-indicator');
+	discsPlayed = 0;
 }
 
 // announce winner and prevent further plays
