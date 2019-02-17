@@ -18,6 +18,6 @@ Made with HTML, CSS, and JS
 ## Potential Features
 - [x] Restart game
 - [x] Select column instead of slot
-- [ ] Sound effects
+- [x] Sound effects
 - [x] Animate token drop
 - [ ] Draw if board fills up
