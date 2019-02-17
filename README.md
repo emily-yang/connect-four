@@ -19,5 +19,5 @@ Made with HTML, CSS, and JS
 - [x] Restart game
 - [x] Select column instead of slot
 - [ ] Sound effects
-- [ ] Animate token drop
+- [x] Animate token drop
 - [ ] Draw if board fills up
