@@ -11,8 +11,21 @@
     <h1>Connect Four</h1>
     <h2 id='turn-indicator'><span class='player1' id='player-indicator'>Player 1 </span>Turn</h2>
     <div id="drop-track"></div>
-    <div id="board">
-    </div>
+    <div id="board"></div>
+    <svg id="grid" width="1000" height="1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <pattern id="Pattern" patternUnits="userSpaceOnUse" width="100" height="100" >
+          <circle cx="50" cy="50" r="40" fill="black" />
+        </pattern>
+        <mask id="Mask">
+          <rect width="100%" height="100%" fill="white"  />
+          <rect width="100%" height="100%" fill="url(#Pattern)" />
+        </mask>
+      </defs>
+
+      <rect x="0" y="0" width="700" height="600" fill="red" opacity="0" />
+      <rect x="0" y="0" width="700" height="600" fill="navy" mask="url(#Mask)" />
+    </svg>
     <button id='restart' onclick='initializeGame()'>Restart</button>
     <script type="text/javascript"  src="./main.js"></script>
   </body>

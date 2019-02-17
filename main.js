@@ -2,6 +2,7 @@ const BOARDROWS = 6;
 const BOARDCOLS = 7;
 
 const board = document.getElementById('board');
+const grid = document.getElementById('grid');
 const playerIndicator = document.getElementById('player-indicator');
 const turnIndicator = document.getElementById('turn-indicator');
 const dropTrack = document.getElementById('drop-track');
@@ -15,30 +16,48 @@ let boardHTML = '';
 for (let row = BOARDROWS - 1; row >= 0; row--) {
 	for (let col = 0; col < BOARDCOLS; col++) {
 		boardHTML += `
-		<div class='slot'>
-			<div id='slot${col}${row}'></div>
-		</div>
+			<div id='slot${col}${row}' class='slot'></div>
 		`;
 	}
 }
 
 let player1Turn;
 const openSlots = new Array(BOARDCOLS);
+const trackTop = dropTrack.offsetTop;
+
+const boardTop = board.offsetTop;
+const boardLeft = board.offsetLeft;
+grid.style.top = `${boardTop}px`;
+grid.style.left = `${boardLeft}px`;
+
 initializeGame();
 
-function handleClick(e) {
-	const col = parseInt(e.target.dataset.col);
-	addPiece(col, openSlots[col]);
-	openSlots[col]++;
+function addDisc(disc) {
+	const col = disc.dataset.col;
+	const row = openSlots[col];
+	const slotToFill = document.getElementById(`slot${col}${row}`);
 
-	// disable column if full
-	if (openSlots[col] >= BOARDCOLS - 1)
-		dropTrack.childNodes[col].style.visibility = "hidden";
-}
+	// TODO: animate drop
+	const slotOffset = slotToFill.getBoundingClientRect();
+	const {top, left} = slotOffset;
 
-function addPiece(col, row) {
-	const newPiece = document.getElementById(`slot${col}${row}`);
-	newPiece.className = player1Turn? 'player1' : 'player2';
+	disc.addEventListener('transitionend', function() {
+		this.classList.toggle('no-transition');
+		this.style.opacity = 0;
+		// add color to slot
+		slotToFill.classList.add(`${player1Turn? 'player1' : 'player2'}`);
+		// change whose turn it is
+		player1Turn = !player1Turn;
+		// update color in drop track
+		dropTrack.childNodes.forEach(slot => {
+			slot.className = player1Turn ? 'player1' : 'player2';
+		});
+		this.style.transform = `translateY(0)`;
+	}, {once: true});
+	disc.style.transform = `translateY(${top - trackTop}px)`;
+
+
+
 
 	// 	// check if there's a win
 	const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
@@ -46,8 +65,6 @@ function addPiece(col, row) {
 		endGame();
 		return;
 	}
-	// change whose turn it is
-	player1Turn = !player1Turn;
 	// update player-indicator text
 	if (player1Turn) {
 		playerIndicator.innerText = 'PLAYER 1 ';
@@ -56,11 +73,17 @@ function addPiece(col, row) {
 		playerIndicator.innerText = 'PLAYER 2 ';
 		playerIndicator.className = 'player2';
 	}
+}
 
-	// update color of drop track
-	dropTrack.childNodes.forEach(slot => {
-		slot.className = player1Turn ? 'player1' : 'player2';
-	});
+// handle user clicking on a column to drop the disc into
+function handleClick(e) {
+	const col = parseInt(e.target.dataset.col);
+	addDisc(e.target);
+	openSlots[col]++;
+
+	// disable column if full
+	if (openSlots[col] >= BOARDCOLS - 1)
+		dropTrack.childNodes[col].style.visibility = "hidden";
 }
 
 // reset entire board and game
@@ -86,10 +109,8 @@ function endGame() {
 }
 
 function checkWin(col, row, currPlayer) {
-	// check down
+	// check down, across, and diagonals
 	return checkDown(col, row, currPlayer) || checkAcross(col, row, currPlayer) || checkDiagonals(col, row, currPlayer);
-	// check across
-	// check diagonals
 }
 
 function checkDown(col, row, currPlayer) {
@@ -99,7 +120,6 @@ function checkDown(col, row, currPlayer) {
 		if (currSlotPlayer !== currPlayer) return false;
 	}
 	return true;
-
 }
 
 function checkAcross(col, row, currPlayer) {
