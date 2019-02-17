@@ -12,23 +12,31 @@
 
 #drop-track div {
     height: 100%;
+    width: 100%;
     border-radius: 100%;
     opacity: 0;
-    transition: transform .75s;
     position: relative;
     z-index: 1;
 }
 
-#drop-track div.player1 {
+#drop-track div.player1, #disc.player1 {
     background-color: var(--player1-color);
 }
 
-#drop-track div.player2 {
+#drop-track div.player2, #disc.player2 {
     background-color: var(--player2-color);
 }
 
 #drop-track div:hover {
-    opacity: 1 !important;
+    opacity: 1;
+}
+
+#disc {
+    position: fixed;
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    transition: all .5s;
 }
 
 #grid {
@@ -74,6 +82,3 @@
     margin-top: 10px;
 }
 
-.no-transition {
-    transition: none !important;
-}

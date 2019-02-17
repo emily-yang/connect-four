@@ -21,7 +21,7 @@ for (let row = BOARDROWS - 1; row >= 0; row--) {
 	}
 }
 
-let player1Turn;
+let player1Turn, clickedCol;
 const openSlots = new Array(BOARDCOLS);
 const trackTop = dropTrack.offsetTop;
 
@@ -32,29 +32,46 @@ grid.style.left = `${boardLeft}px`;
 
 initializeGame();
 
-function addDisc(disc) {
-	const col = disc.dataset.col;
-	const row = openSlots[col];
+function dropDisc(col, row) {
+	// select the slot to be filled
+	// const col = disc.dataset.col;
+	// const row = openSlots[col];
 	const slotToFill = document.getElementById(`slot${col}${row}`);
 
-	// TODO: animate drop
+	// get coords of the slot position (ending location)
 	const slotOffset = slotToFill.getBoundingClientRect();
 	const {top, left} = slotOffset;
 
+	// create a new disc element to be dropped
+	const disc = document.createElement('div');
+	document.body.appendChild(disc);
+	disc.setAttribute('id','disc');
+	disc.style.top = `${trackTop}px`;
+	disc.style.left = `${left}px`;
+	disc.classList.add(`${player1Turn? 'player1' : 'player2'}`);
+	//  move the disc vertically from track to slot location
+	window.setTimeout(function() {
+		disc.style.transform = `translateY(${top - trackTop}px)`;
+	},100);
+
 	disc.addEventListener('transitionend', function() {
-		this.classList.toggle('no-transition');
-		this.style.opacity = 0;
-		// add color to slot
+		//
+		clickedCol.style.visibility = 'visible';
+		// // add color to slot
 		slotToFill.classList.add(`${player1Turn? 'player1' : 'player2'}`);
-		// change whose turn it is
+		// // change whose turn it is
 		player1Turn = !player1Turn;
-		// update color in drop track
+		// // update color in drop track
 		dropTrack.childNodes.forEach(slot => {
 			slot.className = player1Turn ? 'player1' : 'player2';
 		});
-		this.style.transform = `translateY(0)`;
-	}, {once: true});
-	disc.style.transform = `translateY(${top - trackTop}px)`;
+
+		// remove disc after slot is filled
+		document.body.removeChild(disc);
+
+
+	});
+
 
 
 
@@ -75,10 +92,14 @@ function addDisc(disc) {
 	}
 }
 
-// handle user clicking on a column to drop the disc into
+// handle user clicking on a column to place their disc
 function handleClick(e) {
+	// temporarily hide the clicked column until drop is complete
+	clickedCol = e.target;
+	clickedCol.style.visibility = 'hidden';
+
 	const col = parseInt(e.target.dataset.col);
-	addDisc(e.target);
+	dropDisc(col, openSlots[col]);
 	openSlots[col]++;
 
 	// disable column if full
