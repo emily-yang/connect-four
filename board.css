@@ -1,9 +1,5 @@
-#player-indicator.player1 {
-    color: var(--player1-color);
-}
-
-#player-indicator.player2 {
-    color: var(--player2-color);
+section {
+    margin: 3%;
 }
 
 #drop-track {
@@ -11,11 +7,11 @@
     grid-template-rows: 100px;
     grid-template-columns: repeat(7,100px);
     width: 100%;
-    max-width: 700px;
+    /* max-width: 700px; */
     /* border: dashed 1px black; */
     margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
+    /* position: relative;
+    z-index: 1; */
 }
 
 #drop-track div {
@@ -23,8 +19,8 @@
     width: 100%;
     border-radius: 100%;
     opacity: 0;
-    position: relative;
-    z-index: 1;
+    /* position: relative;
+    z-index: 1; */
 }
 
 #drop-track div.player1, #disc.player1 {
@@ -57,11 +53,10 @@
     grid-template-rows: repeat(6, 100px);
     grid-template-columns: repeat(7,100px);
     /* margin: auto; */
-    width: 100%;
-    max-width: 700px;
+    /* max-width: 700px; */
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
-    position: relative;
-    z-index: 10;
+    /* position: relative;
+    z-index: 10; */
     opacity: 1;
 }
 

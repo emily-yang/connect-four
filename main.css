@@ -2,12 +2,15 @@
 @import 'board.css';
 @import 'headers.css';
 
+html, body {
+    margin: 0;
+    height: 100vh;
+}
 body {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    /* height: 100vh; */
     font-family: sans-serif;
 }
+

@@ -1,3 +1,9 @@
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 3%;
+}
 
 h1 {
     /* margin: 0; */
@@ -5,10 +11,10 @@ h1 {
     font-size: 40px;
     text-shadow: 2px 2px 0px rgba(0,0,0,0.75);
     letter-spacing: 1px;
-    height: 0; /* essentially removes it from the flex */
+    /* height: 0;
     position: absolute;
     top: 0;
-    transform: translate(-20vw, 20px) rotate(-10deg);
+    transform: translate(-20vw, 20px) rotate(-10deg); */
 }
 
 h2#turn-indicator {
