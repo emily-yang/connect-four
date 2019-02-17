@@ -6,6 +6,9 @@ const grid = document.getElementById('grid');
 let playerIndicator = document.getElementById('player-indicator');
 const turnIndicator = document.getElementById('turn-indicator');
 const dropTrack = document.getElementById('drop-track');
+const discSound = document.getElementById('disc-sound');
+const clatterSound = document.getElementById('clatter-sound');
+const winSound = document.getElementById('win-sound');
 
 let trackHTML = '';
 for (let col = 0; col < BOARDCOLS; col++) {
@@ -55,6 +58,7 @@ function placeDisc(col, row) {
 	},100);
 
 	disc.addEventListener('transitionend', function() {
+		discSound.play();
 		// make clicked slot visible again
 		if (openSlots[col] < BOARDROWS)
 			clickedCol.style.visibility = 'visible';
@@ -108,6 +112,7 @@ function handleClick(e) {
 
 // reset entire board and game
 function initializeGame() {
+	clatterSound.play();
 	dropTrack.innerHTML = trackHTML;
 	board.innerHTML = boardHTML;
 	player1Turn = true;
@@ -121,12 +126,15 @@ function initializeGame() {
 
 // announce winner and prevent further plays
 function endGame() {
-	const player = player1Turn ? 'player1' : 'player2';
-	turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
-
 	dropTrack.childNodes.forEach(col => {
 		col.style.display = 'none';
-	})
+	});
+
+	setTimeout(() => {
+		winSound.play();
+		const player = player1Turn ? 'player1' : 'player2';
+		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
+	}, 500);
 }
 
 function checkWin(col, row, currPlayer) {
