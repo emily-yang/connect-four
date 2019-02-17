@@ -1,5 +1,6 @@
 :root {
     --player1-color: gold;
     --player2-color: red;
-    --background-color: navy;
+    --grid-color: navy;
+    --background-color: skyblue;
 }

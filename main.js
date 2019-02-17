@@ -1,6 +1,13 @@
 const BOARDROWS = 6;
 const BOARDCOLS = 7;
 
+// let title = document.getElementById('connect-four');
+// const titleText = 'CONNECT FOUR'.split('');
+// console.log(titleText);
+// title.innerHTML = '';
+// for (let i = 0; i < titleText.length; i++) {
+// 	title.innerHTML += `<span style="color: ${i%2===0 ? 'red' : 'gold'}">${titleText[i]}</span>`;
+// }
 const board = document.getElementById('board');
 const grid = document.getElementById('grid');
 let playerIndicator = document.getElementById('player-indicator');
@@ -32,7 +39,7 @@ const openSlots = new Array(BOARDCOLS);
 const trackTop = dropTrack.offsetTop;
 
 const boardTop = board.offsetTop;
-const boardLeft = board.offsetLeft;
+const boardLeft = board.left;
 grid.style.top = `${boardTop}px`;
 grid.style.left = `${boardLeft}px`;
 
@@ -56,7 +63,7 @@ function placeDisc(col, row) {
 	//  move the disc vertically from track to slot location
 	window.setTimeout(function() {
 		disc.style.transform = `translateY(${top - trackTop}px)`;
-	},100);
+	},80);
 
 	disc.addEventListener('transitionend', function() {
 		discSound.play();
@@ -77,7 +84,7 @@ function placeDisc(col, row) {
 
 function updatePlayerIndicator() {
 	if (discsPlayed === BOARDCOLS * BOARDROWS) {
-		turnIndicator.innerHTML = `GAME OVER - DRAW`;
+		turnIndicator.innerHTML = 'NOBODY WINS...';
 		drawSound.play();
 		return;
 	}
@@ -138,7 +145,7 @@ function endGame() {
 		winSound.play();
 		const player = player1Turn ? 'player1' : 'player2';
 		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
-	}, 500);
+	}, 300);
 }
 
 function checkWin(col, row, currPlayer) {
