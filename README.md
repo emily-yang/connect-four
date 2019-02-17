@@ -14,3 +14,10 @@ Made with HTML, CSS, and JS
     - [x] Disable invalid slots
 - [x] Win logic
 - [ ] Make it modular
+
+## Potential Features
+- [x] Restart game
+- [x] Select column instead of slot
+- [ ] Sound effects
+- [ ] Animate token drop
+- [ ] Draw if board fills up
