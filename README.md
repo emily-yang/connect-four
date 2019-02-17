@@ -20,4 +20,4 @@ Made with HTML, CSS, and JS
 - [x] Select column instead of slot
 - [x] Sound effects
 - [x] Animate token drop
-- [ ] Draw if board fills up
+- [x] Draw if board fills up
