@@ -1,13 +1,6 @@
 const BOARDROWS = 6;
 const BOARDCOLS = 7;
 
-// let title = document.getElementById('connect-four');
-// const titleText = 'CONNECT FOUR'.split('');
-// console.log(titleText);
-// title.innerHTML = '';
-// for (let i = 0; i < titleText.length; i++) {
-// 	title.innerHTML += `<span style="color: ${i%2===0 ? 'red' : 'gold'}">${titleText[i]}</span>`;
-// }
 const board = document.getElementById('board');
 const grid = document.getElementById('grid');
 let playerIndicator = document.getElementById('player-indicator');
@@ -130,6 +123,7 @@ function initializeGame() {
 	dropTrack.childNodes.forEach(column => {
 		column.addEventListener('click', handleClick);
 	});
+	turnIndicator.className = '';
 	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
 	playerIndicator = document.getElementById('player-indicator');
 	discsPlayed = 0;
@@ -145,6 +139,7 @@ function endGame() {
 		winSound.play();
 		const player = player1Turn ? 'player1' : 'player2';
 		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
+		turnIndicator.className = 'end';
 	}, 300);
 }
 
