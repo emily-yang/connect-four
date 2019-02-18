@@ -1,6 +1,7 @@
 @import 'variables.css';
 @import 'board.css';
 @import 'headers.css';
+@import 'animation.css';
 
 html, body {
     margin: 0;
@@ -10,7 +11,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
     font-family: sans-serif;
     background-color: var(--background-color);
 }
