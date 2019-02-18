@@ -23,7 +23,7 @@ h2#first {
 
 h2#turn-indicator {
     background-color: var(--black);
-    color: var(--background-color);
+    color: white;
     padding: 15px;
     text-transform: uppercase;
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
