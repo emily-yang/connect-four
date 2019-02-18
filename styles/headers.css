@@ -1,0 +1,60 @@
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    margin-left: 3%;
+    max-width: 40%;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 80px;
+    letter-spacing: 2px;
+    font-family: 'Bungee Shade', cursive;
+    width:100%;
+}
+
+h2#first {
+    color: var(--grid-color);
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+}
+
+h2#turn-indicator {
+    background-color: var(--black);
+    color: white;
+    padding: 15px;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h2#turn-indicator #player-indicator.player1 {
+    color: var(--player1-color);
+}
+
+h2#turn-indicator #player-indicator.player2 {
+    color: var(--player2-color);
+}
+
+button {
+    background-color: var(--black);
+    color: var(--background-color);
+    padding: 0 15px;
+    font-size: 1em;
+    margin: 0 auto;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+    outline: none;
+}
+
+button:hover {
+    color: var(--background-color);
+    background-color: var(--grid-color);
+}
+
+button:active {
+    box-shadow: none;
+    transform: translate(2px, 2px);
+}

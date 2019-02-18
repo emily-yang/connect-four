@@ -1,13 +1,17 @@
 @import 'variables.css';
 @import 'board.css';
 @import 'headers.css';
+@import 'animation.css';
 
+html, body {
+    margin: 0;
+    height: 100vh;
+}
 body {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
     font-family: sans-serif;
+    background-color: var(--background-color);
 }
+

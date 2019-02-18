@@ -32,7 +32,7 @@ const openSlots = new Array(BOARDCOLS);
 const trackTop = dropTrack.offsetTop;
 
 const boardTop = board.offsetTop;
-const boardLeft = board.offsetLeft;
+const boardLeft = board.left;
 grid.style.top = `${boardTop}px`;
 grid.style.left = `${boardLeft}px`;
 
@@ -56,7 +56,7 @@ function placeDisc(col, row) {
 	//  move the disc vertically from track to slot location
 	window.setTimeout(function() {
 		disc.style.transform = `translateY(${top - trackTop}px)`;
-	},100);
+	},80);
 
 	disc.addEventListener('transitionend', function() {
 		discSound.play();
@@ -77,7 +77,7 @@ function placeDisc(col, row) {
 
 function updatePlayerIndicator() {
 	if (discsPlayed === BOARDCOLS * BOARDROWS) {
-		turnIndicator.innerHTML = `GAME OVER - DRAW`;
+		turnIndicator.innerHTML = 'NOBODY WINS...';
 		drawSound.play();
 		return;
 	}
@@ -123,6 +123,7 @@ function initializeGame() {
 	dropTrack.childNodes.forEach(column => {
 		column.addEventListener('click', handleClick);
 	});
+	turnIndicator.className = '';
 	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
 	playerIndicator = document.getElementById('player-indicator');
 	discsPlayed = 0;
@@ -138,7 +139,8 @@ function endGame() {
 		winSound.play();
 		const player = player1Turn ? 'player1' : 'player2';
 		turnIndicator.innerHTML = `🎉 <span class="${player}" id="player-indicator">${player1Turn ? 'PLAYER 1' : 'PLAYER 2'}</span> wins 🎉`;
-	}, 500);
+		turnIndicator.className = 'end';
+	}, 300);
 }
 
 function checkWin(col, row, currPlayer) {
