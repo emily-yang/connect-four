@@ -31,6 +31,7 @@ let player1Turn, clickedCol;
 const openSlots = new Array(BOARDCOLS);
 const trackTop = dropTrack.offsetTop;
 
+// match grid overlay to board coordinates
 const boardTop = board.offsetTop;
 const boardLeft = board.left;
 grid.style.top = `${boardTop}px`;
@@ -38,6 +39,38 @@ grid.style.left = `${boardLeft}px`;
 
 initializeGame();
 
+/* set header, board, and game to their starting states */
+function initializeGame() {
+	userInitiatedFlag ? clatterSound.play() : userInitiatedFlag = true;
+	dropTrack.innerHTML = trackHTML;
+	board.innerHTML = boardHTML;
+	player1Turn = true;
+	openSlots.fill(0);
+	dropTrack.childNodes.forEach(column => {
+		column.addEventListener('click', handleClick);
+	});
+	turnIndicator.className = '';
+	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
+	playerIndicator = document.getElementById('player-indicator');
+	discsPlayed = 0;
+}
+
+/* handle user clicking on a column to place their disc */
+function handleClick(e) {
+	// temporarily hide the clicked column until drop is complete
+	clickedCol = e.target;
+	clickedCol.style.visibility = 'hidden';
+
+	const col = parseInt(e.target.dataset.col);
+	placeDisc(col, openSlots[col]);
+	openSlots[col]++;
+
+	// disable column if full
+	if (openSlots[col] >= BOARDCOLS - 1)
+		dropTrack.childNodes[col].style.visibility = "hidden";
+}
+
+/* Drop a disc into the designated slot location  */
 function placeDisc(col, row) {
 	discsPlayed++;
 
@@ -71,66 +104,12 @@ function placeDisc(col, row) {
 
 		// check if there's a win
 		const isWin = checkWin(parseInt(col), parseInt(row), player1Turn ? 'player1' : 'player2');
-		isWin ?	endGame() : updatePlayerIndicator();
+		isWin ?	showWinner() : updatePlayerIndicator();
 	});
 }
 
-function updatePlayerIndicator() {
-	if (discsPlayed === BOARDCOLS * BOARDROWS) {
-		turnIndicator.innerHTML = 'NOBODY WINS...';
-		drawSound.play();
-		return;
-	}
-
-			// // change whose turn it is
-			player1Turn = !player1Turn;
-			// // update color in drop track
-			dropTrack.childNodes.forEach(slot => {
-				slot.className = player1Turn ? 'player1' : 'player2';
-			});
-
-	if (player1Turn) {
-		playerIndicator.innerText = 'PLAYER 1 ';
-		playerIndicator.className = 'player1';
-	} else {
-		playerIndicator.innerText = 'PLAYER 2 ';
-		playerIndicator.className = 'player2';
-	}
-}
-
-// handle user clicking on a column to place their disc
-function handleClick(e) {
-	// temporarily hide the clicked column until drop is complete
-	clickedCol = e.target;
-	clickedCol.style.visibility = 'hidden';
-
-	const col = parseInt(e.target.dataset.col);
-	placeDisc(col, openSlots[col]);
-	openSlots[col]++;
-
-	// disable column if full
-	if (openSlots[col] >= BOARDCOLS - 1)
-		dropTrack.childNodes[col].style.visibility = "hidden";
-}
-
-// reset entire board and game
-function initializeGame() {
-	userInitiatedFlag ? clatterSound.play() : userInitiatedFlag = true;
-	dropTrack.innerHTML = trackHTML;
-	board.innerHTML = boardHTML;
-	player1Turn = true;
-	openSlots.fill(0);
-	dropTrack.childNodes.forEach(column => {
-		column.addEventListener('click', handleClick);
-	});
-	turnIndicator.className = '';
-	turnIndicator.innerHTML = "<span class='player1' id='player-indicator'>Player 1 </span>Turn";
-	playerIndicator = document.getElementById('player-indicator');
-	discsPlayed = 0;
-}
-
-// announce winner and prevent further plays
-function endGame() {
+/* Display the winner and prevent further plays */
+function showWinner() {
 	dropTrack.childNodes.forEach(col => {
 		col.style.display = 'none';
 	});
@@ -143,11 +122,37 @@ function endGame() {
 	}, 300);
 }
 
+/* Update status bar to show if there is a winner or whose turn is up */
+function updatePlayerIndicator() {
+	if (discsPlayed === BOARDCOLS * BOARDROWS) {
+		turnIndicator.innerHTML = 'NOBODY WINS...';
+		drawSound.play();
+		return;
+	}
+
+	// // change whose turn it is
+	player1Turn = !player1Turn;
+	// // update color in drop track
+	dropTrack.childNodes.forEach(slot => {
+		slot.className = player1Turn ? 'player1' : 'player2';
+	});
+
+	if (player1Turn) {
+		playerIndicator.innerText = 'PLAYER 1 ';
+		playerIndicator.className = 'player1';
+	} else {
+		playerIndicator.innerText = 'PLAYER 2 ';
+		playerIndicator.className = 'player2';
+	}
+}
+
+/* Check if any player has won */
 function checkWin(col, row, currPlayer) {
 	// check down, across, and diagonals
 	return checkDown(col, row, currPlayer) || checkAcross(col, row, currPlayer) || checkDiagonals(col, row, currPlayer);
 }
 
+/* Check if there is a vertical four-in-a-row */
 function checkDown(col, row, currPlayer) {
 	if (row < 3) return false; // can't connect 4 verically if height < 4
 	for (let j = row - 1; j > row - 4; j--) {
@@ -157,6 +162,7 @@ function checkDown(col, row, currPlayer) {
 	return true;
 }
 
+/* Check if there is a horizontal four-in-a-row */
 function checkAcross(col, row, currPlayer) {
 	let sameColorNeighbors = 0;
 
@@ -179,10 +185,12 @@ function checkAcross(col, row, currPlayer) {
 	return sameColorNeighbors >= 3;
 }
 
+/* Check if there is a diagonal four-in-a-row */
 function checkDiagonals(col, row, currPlayer) {
 	return checkUpLeft(col, row,currPlayer) || checkUpRight(col, row,currPlayer);
 }
 
+/* Check if there are four in a row in backward slash direction */
 function checkUpLeft(col, row, currPlayer) {
 	let sameColorNeighbors = 0;
 
@@ -206,6 +214,7 @@ function checkUpLeft(col, row, currPlayer) {
 	return sameColorNeighbors >= 3;
 }
 
+/* Check if there are four in a row in forward slash direction */
 function checkUpRight(col, row, currPlayer) {
 	let sameColorNeighbors = 0;
 
